@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=kimventory-db
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    networks:
+      - kimventory-app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    tty: true
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - kimventory-app
+
+  db:
+    image: mariadb:11.6.2
+    environment:
+      - MYSQL_DATABASE=kimventory-db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - .dbdata:/var/lib/mysql
+    networks:
+      - kimventory-app
+
+networks:
+  kimventory-app:
+    driver: bridge

@@ -1,0 +1,8 @@
+FROM node:23.6.0
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 5173
+RUN npm install bootstrap react-bootstrap
+CMD [ "npm", "run", "dev" ]
