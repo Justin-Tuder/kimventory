@@ -1,22 +1,18 @@
 import { useState } from 'react';
-import './App.css';
 
-function App() {
+function Login() {
 	const [count, setCount] = useState(0);
 
 	return (
 		<>
-			<div>
-				<button className="btn btn-success">Button</button>
-				<a href="./login/">Login</a>
-			</div>
-			<h1>Vite + React</h1>
+			<h1>Login</h1>
+			<button className="btn btn-danger">Cancel</button>
 			<div className="card">
 				<button onClick={() => setCount((count) => count + 1)}>
 					count is {count}
 				</button>
 				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
+					Edit <code>src/Login.tsx</code> and save to test HMR
 				</p>
 			</div>
 			<p className="read-the-docs">
@@ -26,4 +22,4 @@ function App() {
 	);
 }
 
-export default App;
+export default Login;
