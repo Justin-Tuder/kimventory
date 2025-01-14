@@ -33,8 +33,21 @@ services:
     networks:
       - kimventory-app
 
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - db
+    networks:
+      - kimventory-app
+
   db:
     image: mariadb:11.6.2
+    restart: always
     environment:
       - MYSQL_DATABASE=kimventory-db
       - MYSQL_USER=root
