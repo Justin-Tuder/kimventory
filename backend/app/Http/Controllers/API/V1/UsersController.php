@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
-use App\Models\Users;
+use App\Models\User;
+use App\Http\Resources\V1\UserResource;
+use App\Http\Resources\V1\UserCollection;
+use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
 {
@@ -13,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        return new UserCollection(User::paginate());
     }
 
     /**
@@ -35,9 +38,9 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Users $users)
+    public function show(User $users)
     {
-        //
+        return new UserResource($users);
     }
 
     /**
