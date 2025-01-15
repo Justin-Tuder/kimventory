@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpdateUsersRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,18 @@ class UpdateUsersRequest extends FormRequest
      */
     public function rules(): array
     {
+        $method = $this->method();
+
+        if ($method === "PUT") {
+            return [
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string'],
+            ];
+        }
+
         return [
-            //
+            'email' => ['sometimes', 'required', 'string'],
+            'password' => ['sometimes', 'required', 'string'],
         ];
     }
 }

@@ -1,23 +1,15 @@
 <?php
-namespace App\Services\V1;
+namespace App\Filters;
 
 use Illuminate\Http\Request;
 
-class UserQuery
+class ApiFilter
 {
-    protected $allowedParams = [
-        'id' => ['eq', 'gt', 'lt'],
-        'email' => ['eq'],
-        'active' => ['eq'],
-    ];
+    protected $allowedParams = [];
 
-    protected $operatorMap = [
-        'eq' => '=',
-        'gt' => '>',
-        'gte' => '>=',
-        'lt' => '<',
-        'lte' => '<=',
-    ];
+    protected $columnMap = [];
+
+    protected $operatorMap = [];
 
     public function transform(Request $request): array
     {
@@ -30,9 +22,11 @@ class UserQuery
                 continue;
             }
 
+            $column = $this->columnMap[$param] ?? $param;
+
             foreach ($operators as $operator) {
                 if (isset($query[$operator])) {
-                    $data[] = [$param, $this->operatorMap[$operator], $query[$operator]];
+                    $data[] = [$column, $this->operatorMap[$operator], $query[$operator]];
                 }
             }
         }

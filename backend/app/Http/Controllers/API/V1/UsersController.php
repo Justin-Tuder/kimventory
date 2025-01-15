@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\API\V1;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUsersRequest;
-use App\Http\Requests\UpdateUsersRequest;
+use App\Http\Requests\V1\StoreUsersRequest;
+use App\Http\Requests\V1\UpdateUsersRequest;
 use App\Models\User;
 use App\Http\Resources\V1\UserResource;
 use App\Http\Resources\V1\UserCollection;
-use App\Services\V1\UserQuery;
+use App\Filters\V1\UsersFilter;
 use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
@@ -16,24 +16,13 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): UserCollection
     {
-        $filter = new UserQuery();
-        $queryItems = $filter->transform($request); // ['column', 'operator', 'value']
+        $filter = new UsersFilter();
+        $filterItems = $filter->transform($request); // ['column', 'operator', 'value']
+        $users = User::where($filterItems);
 
-        if (count($queryItems) == 0) {
-            return new UserCollection(User::paginate());
-        }
-
-        return new UserResource(User::where($queryItems)->paginate());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return new UserCollection($users->paginate()->appends(($request->query())));
     }
 
     /**
@@ -41,7 +30,7 @@ class UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
-        //
+        return new UserResource(User::create($request->all()));
     }
 
     /**
@@ -53,25 +42,17 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $users)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUsersRequest $request, User $users)
+    public function update(UpdateUsersRequest $request, User $user)
     {
-        //
+        $user->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Users $users)
+    public function destroy(User $users)
     {
         //
     }
