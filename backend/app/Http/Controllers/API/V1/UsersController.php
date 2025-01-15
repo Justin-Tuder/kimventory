@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Models\User;
 use App\Http\Resources\V1\UserResource;
 use App\Http\Resources\V1\UserCollection;
+use App\Services\V1\UserQuery;
 use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
@@ -14,9 +16,16 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new UserCollection(User::paginate());
+        $filter = new UserQuery();
+        $queryItems = $filter->transform($request); // ['column', 'operator', 'value']
+
+        if (count($queryItems) == 0) {
+            return new UserCollection(User::paginate());
+        }
+
+        return new UserResource(User::where($queryItems)->paginate());
     }
 
     /**
@@ -46,7 +55,7 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Users $users)
+    public function edit(User $users)
     {
         //
     }
@@ -54,7 +63,7 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUsersRequest $request, Users $users)
+    public function update(UpdateUsersRequest $request, User $users)
     {
         //
     }
