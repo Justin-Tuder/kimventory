@@ -1,10 +1,30 @@
-import { useState } from 'react';
 import { Button, Form, Card, Row, Container, Col } from 'react-bootstrap';
+import { useState } from 'react';
 
-export default function Login() {
+export default function Signup() {
 	const [showPassword, setShowPassword] = useState(false);
 	const toggleShowPassword = () => {
 		setShowPassword(showPassword ? false : true);
+	};
+	const [name, setName] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
+	const handleSubmit = (e: any) => {
+		e.preventDefault();
+
+		const data = { name, email, password };
+
+		fetch('http://localhost:8000/api/v1/users/register', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(data),
+		}).then(() => {
+			console.log(data);
+			setName('');
+			setEmail('');
+			setPassword('');
+		});
 	};
 
 	return (
@@ -12,20 +32,33 @@ export default function Login() {
 			<Row>
 				<Card bg="light" className="m-5 p-3 shadow">
 					<Card.Body className="d-flex justify-content-center">
-						<h3>Welcome to Kimventory!</h3>
+						<h3>Kimventory!</h3>
 					</Card.Body>
 				</Card>
 			</Row>
 			<Row>
 				<Card bg="light" className="m-5 mt-3 p-5 shadow-lg">
-					<Card.Header>
-						<h3>Login</h3>
-					</Card.Header>
 					<Card.Body>
-						<Form>
+						<Form onSubmit={handleSubmit}>
+							<Form.Group className="mb-3" controlId="signupName">
+								<Form.Label>
+									<h5 className="border-bottom border-dark-subtle">
+										Name
+									</h5>
+								</Form.Label>
+								<Form.Control
+									type="text"
+									placeholder="Enter name"
+									value={name}
+									onChange={(e) => setName(e.target.value)}
+								/>
+								<Form.Text className="text-muted ps-2">
+									e.g. John Doe, Jane Doe, etc.
+								</Form.Text>
+							</Form.Group>
 							<Form.Group
 								className="mb-3"
-								controlId="formBasicEmail"
+								controlId="signupEmail"
 							>
 								<Form.Label>
 									<h5 className="border-bottom border-dark-subtle">
@@ -35,6 +68,8 @@ export default function Login() {
 								<Form.Control
 									type="email"
 									placeholder="Enter email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
 								/>
 								<Form.Text className="text-muted ps-2">
 									We'll never share your email with anyone
@@ -43,7 +78,7 @@ export default function Login() {
 							</Form.Group>
 							<Form.Group
 								className="mb-3"
-								controlId="formBasicPassword"
+								controlId="signupPassword"
 							>
 								<Form.Label>
 									<h5 className="border-bottom border-dark-subtle">
@@ -53,6 +88,10 @@ export default function Login() {
 								<Form.Control
 									type={showPassword ? 'text' : 'password'}
 									placeholder="Password"
+									value={password}
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
 								/>
 							</Form.Group>
 							<Form.Group
@@ -80,8 +119,8 @@ export default function Login() {
 						</Form>
 					</Card.Body>
 					<Card.Footer className="d-flex justify-content-end">
-						<p className="me-3">Don't have an account?</p>
-						<a href="/signup/">Sign Up</a>
+						<p className="me-3">Already have an account?</p>
+						<a href="/login/">Login</a>
 					</Card.Footer>
 				</Card>
 			</Row>
