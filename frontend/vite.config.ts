@@ -13,12 +13,12 @@ export default defineConfig({
 	build: {
 		outDir,
 		emptyOutDir: true,
-		rollupOptions: {
-			input: {
-				main: resolve(root, 'index.html'),
-				login: resolve(root, 'login', 'index.html'),
-				signup: resolve(root, 'signup', 'index.html'),
-			},
-		},
+		// rollupOptions: {
+		// 	input: {
+		// 		main: resolve(root, 'index.html'),
+		// 		login: resolve(root, 'login', 'index.html'),
+		// 		signup: resolve(root, 'signup', 'index.html'),
+		// 	},
+		// },
 	},
 });

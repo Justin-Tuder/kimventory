@@ -1,5 +1,6 @@
 import { Button, Form, Card, Row, Container, Col } from 'react-bootstrap';
 import { useState } from 'react';
+import { post } from '../api/v1/api';
 
 export default function Signup() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -10,38 +11,16 @@ export default function Signup() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	// const handleSubmit = (e: any) => {
-	// 	e.preventDefault();
-
-	// 	const data = { name, email, password };
-
-	// 	fetch('http://localhost:8000/api/v1/users/register', {
-	// 		method: 'POST',
-	// 		headers: { 'Content-Type': 'application/json' },
-	// 		body: JSON.stringify(data),
-	// 	}).then((response) => {
-	// 		console.log(data);
-	// 		setName('');
-	// 		setEmail('');
-	// 		setPassword('');
-	// 	});
-	// };
-
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
-		const formData = { name, email, password };
+		const request = post('/users/registr', {
+			name: name,
+			email: email,
+			password: password,
+		});
 
-		const response = await fetch(
-			'http://localhost:8000/api/v1/users/register',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
-			}
-		);
-
-		console.log(formData);
+		console.log(await request);
 	};
 
 	return (
