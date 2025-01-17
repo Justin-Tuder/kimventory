@@ -37,7 +37,7 @@ class ResponseHelper
      * @param mixed $status
      * @param mixed $message
      * @param mixed $statusCode
-     * @return repsonse
+     * @return response
      */
     public static function error($status = 'error', $message = null, $statusCode = 400)
     {

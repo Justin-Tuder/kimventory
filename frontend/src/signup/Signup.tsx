@@ -10,21 +10,38 @@ export default function Signup() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleSubmit = (e: any) => {
+	// const handleSubmit = (e: any) => {
+	// 	e.preventDefault();
+
+	// 	const data = { name, email, password };
+
+	// 	fetch('http://localhost:8000/api/v1/users/register', {
+	// 		method: 'POST',
+	// 		headers: { 'Content-Type': 'application/json' },
+	// 		body: JSON.stringify(data),
+	// 	}).then((response) => {
+	// 		console.log(data);
+	// 		setName('');
+	// 		setEmail('');
+	// 		setPassword('');
+	// 	});
+	// };
+
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
-		const data = { name, email, password };
+		const formData = { name, email, password };
 
-		fetch('http://localhost:8000/api/v1/users/register', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data),
-		}).then(() => {
-			console.log(data);
-			setName('');
-			setEmail('');
-			setPassword('');
-		});
+		const response = await fetch(
+			'http://localhost:8000/api/v1/users/register',
+			{
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData),
+			}
+		);
+
+		console.log(formData);
 	};
 
 	return (
