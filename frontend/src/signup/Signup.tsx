@@ -14,13 +14,13 @@ export default function Signup() {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
-		const request = post('/users/registr', {
+		await post('/users/register', {
 			name: name,
 			email: email,
 			password: password,
+		}).then((response) => {
+			// if (response.status) console.log(response);
 		});
-
-		console.log(await request);
 	};
 
 	return (

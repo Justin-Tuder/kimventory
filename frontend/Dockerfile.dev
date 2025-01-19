@@ -4,6 +4,11 @@ COPY package.json .
 RUN npm install
 RUN npm i @types/node -D
 RUN npm install bootstrap react-bootstrap axios react-router-dom
+RUN npm i --save @fortawesome/fontawesome-svg-core
+RUN npm i --save @fortawesome/free-solid-svg-icons
+RUN npm i --save @fortawesome/free-regular-svg-icons
+RUN npm i --save @fortawesome/free-brands-svg-icons
+RUN npm i --save @fortawesome/react-fontawesome@latest
 COPY . .
 EXPOSE 5173
 CMD [ "npm", "run", "dev" ]
