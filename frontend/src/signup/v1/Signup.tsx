@@ -1,10 +1,4 @@
-import React, {
-	useRef,
-	useState,
-	useEffect,
-	FormEventHandler,
-	ReactNode,
-} from 'react';
+import { useRef, useState, useEffect, ReactNode } from 'react';
 import {
 	faCheck,
 	faTimes,
@@ -14,10 +8,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Card, Container, Form, Row } from 'react-bootstrap';
 import InputField from '../../components/v1/InputField';
 import api from '../../api/v1/api';
+import { _REGISTER_URL } from '../../global/Global';
 
 const _PASSWORD_REGEX =
 	/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const _REGISTER_URL = '/users/register';
 
 const Signup = () => {
 	const [fullName, setFullName] = useState('');
@@ -165,6 +159,7 @@ const Signup = () => {
 											onChange={(e) =>
 												setFullName(e.target.value)
 											}
+											value={fullName}
 											helperText={fullNameHelperText}
 											required
 										/>
@@ -177,6 +172,7 @@ const Signup = () => {
 											onChange={(e) =>
 												setEmail(e.target.value)
 											}
+											value={email}
 											helperText={emailHelperText}
 											required
 										/>
@@ -220,6 +216,7 @@ const Signup = () => {
 											onChange={(e) =>
 												setPassword(e.target.value)
 											}
+											value={password}
 											helperText={passwordHelperText}
 											required
 										/>
@@ -266,12 +263,13 @@ const Signup = () => {
 											onChange={(e) =>
 												setMatchPassword(e.target.value)
 											}
+											value={matchPassword}
 											helperText={matchPasswordHelperText}
 											required
 										/>
 										<Form.Group className="d-flex mt-3 justify-content-end">
 											<Button
-												id="signup-submit-btn"
+												id="signup-submit-button"
 												type="submit"
 												className="btn btn-success"
 												disabled={

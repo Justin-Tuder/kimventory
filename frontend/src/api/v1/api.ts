@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const _API_URL = 'http://localhost:8000/api/v1';
+import { _API_URL } from '../../global/Global';
 
 const post = async (url: string, data: object) => {
 	try {

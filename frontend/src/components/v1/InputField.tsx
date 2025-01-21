@@ -13,6 +13,7 @@ interface InputFieldProps {
 	helperText: ReactNode;
 	invalid: boolean;
 	onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+	value: string;
 }
 
 const InputField: React.FC<Partial<InputFieldProps>> = ({
@@ -26,6 +27,7 @@ const InputField: React.FC<Partial<InputFieldProps>> = ({
 	helperText = null,
 	invalid = false,
 	onChange = () => {},
+	value = '',
 }: Partial<InputFieldProps>) => {
 	const [requiredInputFocus, setRequiredInputFocus] = useState(false);
 	const requiredInputRef = useRef<HTMLInputElement>(null);
@@ -54,17 +56,11 @@ const InputField: React.FC<Partial<InputFieldProps>> = ({
 				onChange={onChange}
 				onFocus={() => setRequiredInputFocus(true)}
 				onBlur={() => setRequiredInputFocus(false)}
+				value={value}
 				required={required}
 			/>
 			{helperText && (
-				<Form.Text
-					id={id + '-note'}
-					className={
-						requiredInputFocus
-							? 'text-muted ps-2'
-							: 'visually-hidden'
-					}
-				>
+				<Form.Text id={id + '-note'} className="text-muted ps-2">
 					{helperText}
 				</Form.Text>
 			)}
