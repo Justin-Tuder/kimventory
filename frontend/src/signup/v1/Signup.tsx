@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, FormEventHandler } from 'react';
+import React, {
+	useRef,
+	useState,
+	useEffect,
+	FormEventHandler,
+	ReactNode,
+} from 'react';
 import {
 	faCheck,
 	faTimes,
@@ -6,6 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Card, Container, Form, Row } from 'react-bootstrap';
+import InputField from '../../components/v1/InputField';
 import api from '../../api/v1/api';
 
 const _PASSWORD_REGEX =
@@ -13,35 +20,60 @@ const _PASSWORD_REGEX =
 const _REGISTER_URL = '/users/register';
 
 const Signup = () => {
-	const nameRef = useRef<HTMLInputElement>(null);
-	const errorRef = useRef<HTMLParagraphElement>(null);
-
-	const [showPassword, setShowPassword] = useState(false);
-	const toggleShowPassword = () => {
-		setShowPassword(showPassword ? false : true);
-	};
-	const [name, setName] = useState('');
-	const [nameFocus, setNameFocus] = useState(false);
-
+	const [fullName, setFullName] = useState('');
 	const [email, setEmail] = useState('');
-	const [emailFocus, setEmailFocus] = useState(false);
 
 	const [password, setPassword] = useState('');
 	const [validPassword, setValidPassword] = useState(false);
-	const [passwordFocus, setPasswordFocus] = useState(false);
 
 	const [matchPassword, setMatchPassword] = useState('');
 	const [validMatchPassword, setValidMatchPassword] = useState(false);
-	const [matchPasswordFocus, setMatchPasswordFocus] = useState(false);
 
 	const [errorMessage, setErrorMessage] = useState('');
 	const [success, setSuccess] = useState(false);
 
-	useEffect(() => {
-		if (nameRef.current) {
-			nameRef.current.focus();
-		}
-	}, []);
+	const errorRef = useRef<HTMLParagraphElement>(null);
+
+	const fullNameHelperText: ReactNode = (
+		<>
+			<FontAwesomeIcon icon={faInfoCircle} /> 5 to 150 characters.
+			<br />
+			<FontAwesomeIcon icon={faInfoCircle} className="ps-2" /> Must begin
+			with a letter.
+		</>
+	);
+
+	const emailHelperText: ReactNode = (
+		<>
+			<FontAwesomeIcon icon={faInfoCircle} /> 5 to 150 characters. <br />
+			<FontAwesomeIcon icon={faInfoCircle} className="ps-2" /> Must begin
+			with a letter. <br />
+			<FontAwesomeIcon icon={faInfoCircle} className="ps-2" /> Letters,
+			numbers, underscores, hypens allowed.
+		</>
+	);
+
+	const passwordHelperText: ReactNode = (
+		<>
+			<FontAwesomeIcon icon={faInfoCircle} /> 8 to 24 characters. <br />
+			<FontAwesomeIcon icon={faInfoCircle} className="ps-2" /> Must
+			include uppercase and lowercase letters, a number, and a special
+			character <br />
+			<FontAwesomeIcon icon={faInfoCircle} className="ps-2" /> Allowed
+			special characters: <span aria-label="exclamation mark">!</span>{' '}
+			<span aria-label="at symbol">@</span>{' '}
+			<span aria-label="hashtag">#</span>{' '}
+			<span aria-label="dollar sign">$</span>{' '}
+			<span aria-label="percent">%</span>
+		</>
+	);
+
+	const matchPasswordHelperText: ReactNode = (
+		<>
+			<FontAwesomeIcon icon={faInfoCircle} /> Must match the first
+			password input field.
+		</>
+	);
 
 	useEffect(() => {
 		const result = _PASSWORD_REGEX.test(password);
@@ -69,7 +101,7 @@ const Signup = () => {
 			const response = await api.post(
 				_REGISTER_URL,
 				JSON.stringify({
-					name: name,
+					name: fullName,
 					email: email,
 					password: password,
 				}),
@@ -123,236 +155,120 @@ const Signup = () => {
 								</Row>
 								<Row>
 									<Form onSubmit={handleSubmit}>
-										<Form.Group className="mt-3">
-											<Form.Label htmlFor="name">
-												Name:
-											</Form.Label>
-											<Form.Control
-												id="name"
-												type="text"
-												ref={nameRef}
-												autoComplete="off"
-												aria-describedby="nidnote"
-												onChange={(e) =>
-													setName(e.target.value)
-												}
-												onFocus={() =>
-													setNameFocus(true)
-												}
-												onBlur={() =>
-													setNameFocus(false)
-												}
-												required
-											/>
-											<Form.Text
-												id="nidnote"
-												className={
-													nameFocus
-														? 'text-muted ps-2'
-														: 'visually-hidden'
-												}
-											>
-												<FontAwesomeIcon
-													icon={faInfoCircle}
-												/>
-												5 to 150 characters. <br />
-												Must begin with a letter. <br />
-												Letters, numbers, underscores,
-												hyphens allowed.
-											</Form.Text>
-										</Form.Group>
-										<Form.Group className="mt-3">
-											<Form.Label htmlFor="email">
-												Email:
-											</Form.Label>
-											<Form.Control
-												id="email"
-												type="text"
-												autoComplete="off"
-												aria-describedby="email-note"
-												onChange={(e) =>
-													setEmail(e.target.value)
-												}
-												onFocus={() =>
-													setEmailFocus(true)
-												}
-												onBlur={() =>
-													setEmailFocus(false)
-												}
-												required
-											/>
-											<Form.Text
-												id="email-note"
-												className={
-													emailFocus
-														? 'text-muted ps-2'
-														: 'visually-hidden'
-												}
-											>
-												<FontAwesomeIcon
-													icon={faInfoCircle}
-												/>
-												5 to 150 characters. <br />
-												Must begin with a letter. <br />
-												Letters, numbers, underscores,
-												hypens allowed.
-											</Form.Text>
-										</Form.Group>
-										<Form.Group className="mt-3">
-											<Form.Label htmlFor="password">
-												Password:
-												<span
-													className={
-														validPassword
-															? 'valid'
-															: 'visually-hidden'
-													}
-												>
-													<FontAwesomeIcon
-														icon={faCheck}
-													/>
-												</span>
-												<span
-													className={
-														validPassword ||
-														!password
-															? 'visually-hidden'
-															: 'invalid'
-													}
-												>
-													<FontAwesomeIcon
-														icon={faTimes}
-													/>
-												</span>
-											</Form.Label>
-											<Form.Control
-												id="password"
-												type={
-													showPassword
-														? 'text'
-														: 'password'
-												}
-												aria-invalid={
-													validPassword
-														? 'false'
-														: 'true'
-												}
-												aria-describedby="password-note"
-												onChange={(e) =>
-													setPassword(e.target.value)
-												}
-												onFocus={() =>
-													setPasswordFocus(true)
-												}
-												onBlur={() =>
-													setPasswordFocus(false)
-												}
-												required
-											/>
-											<Form.Text
-												id="password-note"
-												className={
-													passwordFocus &&
-													!validPassword
-														? 'text-muted ps-2'
-														: 'visually-hidden'
-												}
-											>
-												<FontAwesomeIcon
-													icon={faInfoCircle}
-												/>
-												8 to 24 characters. Must include
-												uppercase and lowercase letters,
-												a number, and a special
-												character <br />
-												Allowed special characters:{' '}
-												<span aria-label="exclamation mark">
-													!
-												</span>{' '}
-												<span aria-label="at symbol">
-													@
-												</span>{' '}
-												<span aria-label="hashtag">
-													#
-												</span>{' '}
-												<span aria-label="dollar sign">
-													$
-												</span>{' '}
-												<span aria-label="percent">
-													%
-												</span>
-											</Form.Text>
-										</Form.Group>
-										<Form.Group className="mt-3">
-											<Form.Label htmlFor="confirm-password">
-												Confirm Password:{' '}
-												<span
-													className={
-														validMatchPassword &&
-														matchPassword
-															? 'valid'
-															: 'visually-hidden'
-													}
-												>
-													<FontAwesomeIcon
-														icon={faCheck}
-													/>
-												</span>
-												<span
-													className={
-														validMatchPassword ||
-														!matchPassword
-															? 'visually-hidden'
-															: 'invalid'
-													}
-												>
-													<FontAwesomeIcon
-														icon={faTimes}
-													/>
-												</span>
-											</Form.Label>
-											<Form.Control
-												id="confirm-password"
-												type={
-													showPassword
-														? 'text'
-														: 'password'
-												}
-												aria-invalid={
-													validMatchPassword
-														? 'false'
-														: 'true'
-												}
-												aria-describedby="confirm-password-note"
-												onChange={(e) =>
-													setMatchPassword(
-														e.target.value
-													)
-												}
-												onFocus={() =>
-													setMatchPasswordFocus(true)
-												}
-												onBlur={() =>
-													setMatchPasswordFocus(false)
-												}
-												required
-											/>
-											<Form.Text
-												id="confirm-password-note"
-												className={
-													matchPasswordFocus &&
-													!validMatchPassword
-														? 'text-muted ps-2'
-														: 'visually-hidden'
-												}
-											>
-												<FontAwesomeIcon
-													icon={faInfoCircle}
-												/>{' '}
-												Must match the first password
-												input field.
-											</Form.Text>
-										</Form.Group>
+										<InputField
+											id="full-name"
+											type="text"
+											autoComplete="off"
+											label="Full Name: "
+											focus
+											placeholder="John Doe, Jane Doe, etc."
+											onChange={(e) =>
+												setFullName(e.target.value)
+											}
+											helperText={fullNameHelperText}
+											required
+										/>
+										<InputField
+											id="email"
+											type="text"
+											autoComplete="off"
+											label="Email: "
+											placeholder="user@example.com"
+											onChange={(e) =>
+												setEmail(e.target.value)
+											}
+											helperText={emailHelperText}
+											required
+										/>
+										<InputField
+											id="password"
+											type="password"
+											autoComplete="off"
+											invalid={
+												validPassword ? false : true
+											}
+											label={
+												<>
+													Password:
+													<span
+														className={
+															validPassword
+																? 'valid'
+																: 'visually-hidden'
+														}
+													>
+														{' '}
+														<FontAwesomeIcon
+															icon={faCheck}
+														/>{' '}
+													</span>
+													<span
+														className={
+															validPassword ||
+															!password
+																? 'visually-hidden'
+																: 'invalid'
+														}
+													>
+														{' '}
+														<FontAwesomeIcon
+															icon={faTimes}
+														/>{' '}
+													</span>
+												</>
+											}
+											onChange={(e) =>
+												setPassword(e.target.value)
+											}
+											helperText={passwordHelperText}
+											required
+										/>
+										<InputField
+											id="confirm-password"
+											type="password"
+											autoComplete="off"
+											invalid={
+												validMatchPassword
+													? false
+													: true
+											}
+											label={
+												<>
+													Confirm Password:{' '}
+													<span
+														className={
+															validMatchPassword &&
+															matchPassword
+																? 'valid'
+																: 'visually-hidden'
+														}
+													>
+														{' '}
+														<FontAwesomeIcon
+															icon={faCheck}
+														/>{' '}
+													</span>
+													<span
+														className={
+															validMatchPassword ||
+															!matchPassword
+																? 'visually-hidden'
+																: 'invalid'
+														}
+													>
+														{' '}
+														<FontAwesomeIcon
+															icon={faTimes}
+														/>{' '}
+													</span>
+												</>
+											}
+											onChange={(e) =>
+												setMatchPassword(e.target.value)
+											}
+											helperText={matchPasswordHelperText}
+											required
+										/>
 										<Form.Group className="d-flex mt-3 justify-content-end">
 											<Button
 												id="signup-submit-btn"
@@ -360,7 +276,9 @@ const Signup = () => {
 												className="btn btn-success"
 												disabled={
 													!validPassword ||
-													!validMatchPassword
+													!validMatchPassword ||
+													!fullName ||
+													!email
 														? true
 														: false
 												}
