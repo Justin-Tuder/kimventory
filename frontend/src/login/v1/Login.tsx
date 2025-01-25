@@ -1,10 +1,13 @@
 import { Container, Card, Row, FormGroup, Button, Form } from 'react-bootstrap';
 import InputField from '../../components/v1/InputField';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { _LOGIN_URL } from '../../global/Global';
 import api from '../../api/v1/api';
+import AuthContext from '../../context/AuthContext';
 
 const Login = () => {
+	const { setAuth } = useContext(AuthContext);
+
 	const errorRef = useRef<HTMLParagraphElement>(null);
 
 	const [email, setEmail] = useState('');
@@ -31,6 +34,8 @@ const Login = () => {
 			);
 
 			const accessToken = response?.data?.token;
+
+			setAuth({ email, password, accessToken });
 
 			setEmail('');
 			setPassword('');
